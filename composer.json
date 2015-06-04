@@ -1,0 +1,34 @@
+{
+  "name": "gamenet/zsquare",
+  "type": "library",
+  "description": "PHP-library for interactions with zsquare.ru api",
+  "keywords": [
+    "api",
+    "zsquare"
+  ],
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Nikolay Bondarenko",
+      "email": "misterionkell@gmail.com",
+      "homepage": "http://misterion.ru"
+    }
+  ],
+  "require": {
+    "php": "~5.5",
+    "lib-curl": "*"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "~4.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "ZSquare\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "ZSquare\\Tests\\": "tests/"
+    }
+  }
+}
