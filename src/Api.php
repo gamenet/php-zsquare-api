@@ -311,7 +311,9 @@ class Api
      */
     public function getProducts()
     {
-        $products = $this->request('getproducts');
+        //INFO The GetProducts method do not work with POST. Also, using GET we should not use `Accept` header as in
+        // post case.
+        $products = $this->request('getproducts', [], true);
 
         return array_map(
             function ($e) {
@@ -348,19 +350,26 @@ class Api
         );
     }
 
-    protected function request($method, $data = [])
+    protected function request($method, $data = [], $forceGet = false)
     {
         $headers = [];
 
-        $curl = curl_init(self::BASE_URL . $method);
-        curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($curl, CURLOPT_POST, true);
-        if (!empty($data)) {
-            curl_setopt($curl, CURLOPT_POSTFIELDS, urldecode(http_build_query($data)));
+        $url =  self::BASE_URL . $method;
+        if ($forceGet && !empty($data)) {
+            $url .= '?' . http_build_query($data);
+        };
+
+        $curl = curl_init($url);
+        if (!$forceGet) {
+            curl_setopt($curl, CURLOPT_POST, true);
+            if (!empty($data)) {
+                curl_setopt($curl, CURLOPT_POSTFIELDS, urldecode(http_build_query($data)));
+            }
+            curl_setopt($curl, CURLOPT_HTTPHEADER, ['Accept: application/json']);
         }
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($curl, CURLOPT_FOLLOWLOCATION, 1);
         curl_setopt($curl, CURLOPT_TIMEOUT, 30);
-        curl_setopt($curl, CURLOPT_HTTPHEADER, ['Accept: application/json']);
         curl_setopt($curl, CURLOPT_HEADER, 0);
         curl_setopt($curl, CURLOPT_USERPWD, $this->authToken);
         curl_setopt($curl, CURLOPT_HEADERFUNCTION , function($ch, $headerLine) use (&$headers) {
@@ -385,7 +394,6 @@ class Api
             throw new Exception($error, self::ERROR_UNKNOWN_ERROR);
         }
         curl_close($curl);
-
         if ($code !== 200) {
             throw new Exception($headers['ErrorMessage'], (int)$headers['ErrorCode']);
         }
