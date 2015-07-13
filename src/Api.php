@@ -338,6 +338,11 @@ class Api
         ];
 
         $response = $this->request('getinfo', $args);
+        if (!isset($response['Message']) || !isset($response['Message']['Subscription'])) {
+            throw new \RuntimeException('GetInfo response has no Message/Subscription data');
+        }
+
+        $response = $response['Message']['Subscription'];
 
         return new Subscription(
             $response['Status'],
