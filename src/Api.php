@@ -128,7 +128,7 @@ class Api
      */
     const ERROR_WRONG_REQUEST = 602;
 
-    const BASE_URL = 'https://api.zsquare.ru/subscription/';
+    const BASE_URL = 'https://api1.zsquare.ru/subscription/';
 
     /**
      * @var string
