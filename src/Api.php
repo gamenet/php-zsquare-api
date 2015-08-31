@@ -350,7 +350,7 @@ class Api
             $response['LicenseCount'],
             new \DateTimeImmutable($response['StatusChangeTime']),
             new \DateTimeImmutable($response['StartTime']),
-            new \DateTimeImmutable($response['EndTime']),
+            $response['EndTime'] ? new \DateTimeImmutable($response['EndTime']) : null,
             $response['ProductId']
         );
     }
